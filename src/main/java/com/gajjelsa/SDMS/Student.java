@@ -1,12 +1,22 @@
 package com.gajjelsa.SDMS;
 
 public class Student {
+
+
+    private Long id;
     private String name;
     private String email;
     private String fatherName;
     private Integer phoneNumber;
     private String className;
     private String address;
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
