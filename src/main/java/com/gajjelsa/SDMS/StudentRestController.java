@@ -1,5 +1,6 @@
 package com.gajjelsa.SDMS;
 
+import com.gajjelsa.SDMS.Student;
 import com.gajjelsa.SDMS.service.IStudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -30,15 +31,14 @@ public  class StudentRestController {
         // service.getStudentById(id)
         return new Student();
     }
-
-    @PostMapping("/Student/{id}")
-    public Student updateStudent(@PathVariable Integer id){
-        //service.updateStudentById(id)
-       return new Student();
-    }
     @DeleteMapping("/Student/{id}")
     public ResponseEntity<Student> deleteStudentById(@PathVariable Integer id){
         //service.deleteStudentById(id)
      return ResponseEntity.noContent().build();
+    }
+    @PostMapping("/Student/{id}")
+    public Student updateStudent(@PathVariable Integer id){
+        //service.updateStudentById(id)
+        return new Student();
     }
 }
