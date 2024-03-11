@@ -1,17 +1,21 @@
 package com.gajjelsa.SDMS;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 public class Student {
 
     @Id
     private Long id;
+    @NotBlank(message = "Name is mandatory")
     private String name;
     private String email;
     private String fatherName;
-    private Integer phoneNumber;
+    private String phoneNumber; // Changed to String to accommodate international numbers and leading zeros
     private String className;
     private String address;
     public Long getId() {
@@ -46,11 +50,11 @@ public class Student {
         this.fatherName = fatherName;
     }
 
-    public Integer getPhoneNumber() {
+    public String getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(Integer phoneNumber) {
+    public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
@@ -77,7 +81,7 @@ public class Student {
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", fatherName='" + fatherName + '\'' +
-                ", phoneNumber=" + phoneNumber +
+                ", phoneNumber='" + phoneNumber + '\'' +
                 ", className='" + className + '\'' +
                 ", address='" + address + '\'' +
                 '}';

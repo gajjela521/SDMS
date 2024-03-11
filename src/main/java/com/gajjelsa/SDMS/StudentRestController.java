@@ -1,44 +1,55 @@
 package com.gajjelsa.SDMS;
 
-import com.gajjelsa.SDMS.Student;
+
 import com.gajjelsa.SDMS.service.IStudentService;
+import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
+import java.util.Optional;
+
 
 @RestController
 @RequestMapping("/api")
-public  class StudentRestController {
+public class StudentRestController {
+
+    private static final Logger logger = LoggerFactory.getLogger(StudentRestController.class);
+    private final IStudentService service;
+
     @Autowired
-    private IStudentService service;
+    public StudentRestController(IStudentService service) {
+        this.service = service;
+    }
+
     @PostMapping("/Student")
-    public Student registerStudent(@RequestBody Student student){
-        System.out.println("student data"+student);
-        Student st= service.saveStudent(student);
-        return st;
+    public ResponseEntity<Student> registerStudent(@RequestBody @Valid Student student) {
+        logger.info("Registering student data: {}", student);
+        Student savedStudent = service.saveStudent(student);
+        return ResponseEntity.created(URI.create("/api/Student/" + savedStudent.getId())).body(savedStudent);
     }
     @GetMapping("/Students")
-    public List<Student> getAllStudents(){
-        // invoke service that fetch all record of students
-        List<Student> students=service.getAllStudents();
-        return students;
+    public List<Student> getAllStudents() {
+        return service.getAllStudents();
     }
     @GetMapping("/Student/{id}")
-    public Student getStudentById(@PathVariable Integer id){
-        // invoke service that fetch all record of students
-        // service.getStudentById(id)
-        return new Student();
+    public ResponseEntity<Student> getStudentById(@PathVariable Integer id) {
+        Optional<Student> studentOptional = service.getStudentById(id);
+
+        return studentOptional.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
     @DeleteMapping("/Student/{id}")
-    public ResponseEntity<Student> deleteStudentById(@PathVariable Integer id){
-        //service.deleteStudentById(id)
-     return ResponseEntity.noContent().build();
-    }
-    @PostMapping("/Student/{id}")
-    public Student updateStudent(@PathVariable Integer id){
-        //service.updateStudentById(id)
-        return new Student();
+    public ResponseEntity<Void> deleteStudentById(@PathVariable Integer id) {
+        Optional<Student> studentOptional = service.getStudentById(id);
+        if (studentOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        service.deleteStudentById(id);
+        return ResponseEntity.noContent().build();
     }
 }
